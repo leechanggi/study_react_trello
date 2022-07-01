@@ -1,10 +1,12 @@
 import React from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { useRecoilState } from 'recoil';
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 import { toDoState } from './atoms';
 import { darkTheme } from './theme';
+
+import DragabbleCard from './Components/DragabbleCard';
 
 const GlobalStyle = createGlobalStyle`
   /* reset */ 
@@ -161,8 +163,16 @@ const Card = styled.li`
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
 
-  const onDragEnd = ({ source, destination }: any) => {
-    console.log(destination.index);
+  const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
+    if (!destination) {
+      return;
+    }
+    // setToDos(oldToDos => {
+    //   const toDosCopy = [...oldToDos];
+    //   toDosCopy.splice(source.index, 1);
+    //   toDosCopy.splice(destination?.index, 0, draggableId);
+    //   return toDosCopy;
+    // });
   };
 
   return (
@@ -171,22 +181,16 @@ function App() {
       <DragDropContext onDragEnd={onDragEnd}>
         <Wrapper>
           <Boards>
-            <Droppable droppableId="one">
+            {/* <Droppable droppableId="one">
               {magic => (
                 <Board ref={magic.innerRef} {...magic.droppableProps}>
                   {toDos.map((toDo, index) => (
-                    <Draggable draggableId={toDo} index={index} key={index}>
-                      {magic => (
-                        <Card ref={magic.innerRef} {...magic.dragHandleProps} {...magic.draggableProps}>
-                          {toDo}
-                        </Card>
-                      )}
-                    </Draggable>
+                    <DragabbleCard key={toDo} toDo={toDo} index={index} />
                   ))}
                   {magic.placeholder}
                 </Board>
               )}
-            </Droppable>
+            </Droppable> */}
           </Boards>
         </Wrapper>
       </DragDropContext>
